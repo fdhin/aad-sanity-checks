@@ -16,11 +16,11 @@ foreach ($user in $users) {
 
     # If MFA is enabled or there are authentication methods, set variables based on user details
     if ($mfaStatus -ne $null -or $methodTypes -ne $null) {
-        if ($mfaStatus -eq $null) {
+        if ($null -eq $mfaStatus) {
             $mfaStatus = "Enabled (Conditional Access)"
         }
         $authMethods = $methodTypes.MethodType
-        $defaultAuthMethod = ($methodTypes | Where {$_.IsDefault -eq "True"}).MethodType
+        $defaultAuthMethod = ($methodTypes | Where-Object {$_.IsDefault -eq "True"}).MethodType
         $verifyEmail = $user.StrongAuthenticationUserDetails.Email
         $phoneNumber = $user.StrongAuthenticationUserDetails.PhoneNumber
         $alternativePhoneNumber = $user.StrongAuthenticationUserDetails.AlternativePhoneNumber
@@ -49,4 +49,4 @@ foreach ($user in $users) {
 }
 
 # Select certain properties from the results array and export them to a CSV file
-$results | Select UserName,UserPrincipalName,MFAStatus,DefaultAuthMethod,MFAEmail,PhoneNumber,AlternativePhoneNumber,DeviceName | Export-Csv MFAReport.csv
+$results | Select-Object UserName,UserPrincipalName,MFAStatus,DefaultAuthMethod,MFAEmail,PhoneNumber,AlternativePhoneNumber,DeviceName | Export-Csv MFAReport.csv
